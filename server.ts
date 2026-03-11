@@ -65,6 +65,9 @@ function getFirstPrice(outcomePrices: any): string | null {
   return typeof prices === 'string' ? prices : null;
 }
 
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import fetch from 'node-fetch';
+
 async function fetchWithTimeout(url: string, options: any = {}, timeout = 8000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
@@ -76,11 +79,15 @@ async function fetchWithTimeout(url: string, options: any = {}, timeout = 8000) 
     'Referer': 'https://polymarket.com/'
   };
 
+  const proxyUrl = process.env.HTTP_PROXY;
+  const agent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined;
+
   try {
     const response = await fetch(url, {
       ...options,
       headers: { ...defaultHeaders, ...options.headers },
-      signal: controller.signal
+      signal: controller.signal,
+      agent
     });
     clearTimeout(id);
     return response;
