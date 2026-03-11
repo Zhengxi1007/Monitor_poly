@@ -65,9 +65,15 @@ export default function App() {
     try {
       const res = await fetch('/api/trending');
       const data = await res.json();
-      setTrendingMarkets(data);
+      if (Array.isArray(data)) {
+        setTrendingMarkets(data);
+      } else {
+        console.error('Trending markets API returned an error:', data);
+        setTrendingMarkets([]);
+      }
     } catch (err) {
-      console.error('Failed to fetch trending markets');
+      console.error('Failed to fetch trending markets', err);
+      setTrendingMarkets([]);
     } finally {
       setLoadingTrending(false);
     }
@@ -162,9 +168,15 @@ export default function App() {
     try {
       const res = await fetch('/api/monitors');
       const data = await res.json();
-      setMonitors(data);
+      if (Array.isArray(data)) {
+        setMonitors(data);
+      } else {
+        console.error('Monitors API returned an error:', data);
+        setMonitors([]);
+      }
     } catch (err) {
-      console.error('Failed to fetch monitors');
+      console.error('Failed to fetch monitors', err);
+      setMonitors([]);
     }
   };
 
