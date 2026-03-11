@@ -632,6 +632,12 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     app.use(express.static("dist"));
+    // SPA fallback: serve index.html for all non-API routes
+    app.get("*", (req, res) => {
+      if (!req.path.startsWith("/api/")) {
+        res.sendFile(path.resolve("dist/index.html"));
+      }
+    });
   }
 
   const PORT = 3000;
