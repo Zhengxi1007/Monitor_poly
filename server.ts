@@ -531,12 +531,15 @@ app.get("/api/resolve", async (req, res) => {
     }
 
     // Return markets for the user to choose from
+    const markets = eventData.markets || (Array.isArray(eventData) ? eventData : [eventData]);
+    
     res.json({
-      title: eventData.title,
-      markets: (eventData.markets || []).map((m: any) => ({
+      title: eventData.title || eventData.question || slug,
+      markets: markets.map((m: any) => ({
         id: m.id || m.conditionId,
-        question: m.question,
-        groupItemTitle: m.groupItemTitle
+        question: m.question || m.title,
+        groupItemTitle: m.groupItemTitle || m.xAxisValue || m.outcomes?.[0],
+        price: parseFloat(getFirstPrice(m.outcomePrices) || m.lastTradePrice || "0")
       }))
     });
   } catch (err) {
