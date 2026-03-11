@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Polymarket Monitor",
+  "description": "Monitor Polymarket odds and send email alerts when thresholds are met.",
+  "requestFramePermissions": []
+}
